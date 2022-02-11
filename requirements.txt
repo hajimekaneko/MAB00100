@@ -1,0 +1,9 @@
+django
+django_cleanup
+django_filter
+djangorestframework
+django-cors-headers
+drf_writable_nested
+gunicorn 
+whitenoise 
+django-heroku
