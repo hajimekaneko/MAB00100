@@ -140,8 +140,10 @@ if DEBUG:
     INSTALLED_APPS += ['corsheaders']
     MIDDLEWARE = ['corsheaders.middleware.CorsMiddleware'] + MIDDLEWARE
     CORS_ORIGIN_WHITELIST = (
-        'http://172.17.0.30:8080',
+        'http://192.168.0.22:8080',
         'http://localhost:8080',
+        'https://maf00100.herokuapp.com',
+        'http://10.145.77.110:8080',
     )
     CORS_ALLOW_HEADERS = default_headers + (
     'x-kbn-token',
