@@ -33,7 +33,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'apiv1.apps.Apiv1Config',
+    'taskmanagement.apps.TaskmanagementConfig',
     'main.apps.MainConfig',
     'django.contrib.admin',
     'django.contrib.auth',
