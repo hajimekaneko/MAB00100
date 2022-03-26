@@ -4,7 +4,6 @@ from django.db.models.fields.related import ForeignKey
 
 
 class Auth(models.Model):
-    """本モデル"""
 
     class Meta:
         db_table = 'auth'
