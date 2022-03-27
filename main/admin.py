@@ -1,7 +1,6 @@
 from django.contrib import admin
 
-from .models import Auth, List, Task
+from .models import UserProfile
 
-admin.site.register(Auth)
-admin.site.register(List)
-admin.site.register(Task)
+
+admin.site.register(UserProfile)

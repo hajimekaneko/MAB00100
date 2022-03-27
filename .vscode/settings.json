@@ -15,7 +15,7 @@
   }
 ],
 "workbench.colorCustomizations": {
-  "activityBar.background": "#6e3831"
+  "activityBar.background": "#31326e"
 },
 
 // Prettier の ESLint 連携
