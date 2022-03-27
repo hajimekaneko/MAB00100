@@ -1,6 +1,9 @@
 from django.contrib import admin
 
-from .models import List, Task
+from .models import TaskStatus, List, Task, TaskGroup
 
-admin.site.register(List)
+admin.site.register(TaskStatus)
+# admin.site.register(TaskType)
+admin.site.register(TaskGroup)
 admin.site.register(Task)
+admin.site.register(List)

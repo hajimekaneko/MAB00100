@@ -48,6 +48,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     # カラム名 = データ型（オプション）
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
+    userId = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     # ユーザが退会したらここをFalseにする（論理削除）
     is_active = models.BooleanField(default=True)
     # 管理画面にアクセスできるか
