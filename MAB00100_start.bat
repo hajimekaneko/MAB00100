@@ -9,10 +9,10 @@ d:
 cd User_Application\%JobName%
 call venv\Scripts\activate
 start "%JobName%" python manage.py runserver
+start code d:\User_Application\%JobName%
 
 cd ..
 cd %JobName2%
 start "frontend" npm run serve
-start code d:\User_Application\%JobName%
-code -n d:\User_Application\%JobName2% 
+start /b code -n d:\User_Application\%JobName2% 
 

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',  # django-cleanupを使いたいなら、これも追加
     'rest_framework',  # 追加
     'django_filters',
+    # 'main',
 ]
 
 MIDDLEWARE = [
@@ -87,6 +88,15 @@ DATABASES = {
     }
 }
 
+
+REST_FRAMEWORK = { #追加
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ]
+}
+
+# Djangoプロジェクトのユーザ認証を変更
+AUTH_USER_MODEL = 'main.UserProfile'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
