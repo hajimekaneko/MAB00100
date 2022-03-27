@@ -1,9 +1,8 @@
 from rest_framework import serializers
-from .models import Auth
+from .models import UserProfile
 
 
-
-class AuthSerializer(serializers.ModelSerializer):
+class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Auth
-        fields = ('userId', 'token')
+        model = UserProfile
+        fields = ('name')

@@ -6,21 +6,6 @@ from django.db import models
 # BaseUserManager利用してUserManagerモデルをカスタマイズ
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
-
-class Auth(models.Model):
-
-    class Meta:
-        db_table = 'auth'
-
-    userId = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    email = models.EmailField(verbose_name='email', max_length=20)
-    password = models.CharField(verbose_name='password', max_length=20, null=True, blank=True)
-    token = models.CharField(verbose_name='token', max_length=20, null=True, blank=True)
-
-    def __str__(self):
-        return self.email
-
-
 class UserProfileManager(BaseUserManager):
     """Manager for user profiles"""
 
