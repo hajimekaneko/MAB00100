@@ -7,3 +7,5 @@ drf_writable_nested
 gunicorn 
 whitenoise 
 django-heroku
+djangorestframework-simplejwt==4.6.*  検討中
+djoser　検討中

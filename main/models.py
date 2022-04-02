@@ -49,6 +49,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
     userId = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    loggedin = models.BooleanField(default=False, help_text='ログイン状態か')
     # ユーザが退会したらここをFalseにする（論理削除）
     is_active = models.BooleanField(default=True)
     # 管理画面にアクセスできるか
@@ -59,6 +60,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     # 必須項目追加
     REQUIRED_FIELDS = ['name']
+
 
     # 1つのnameフィールドで表示したいので、既存のメソッドをオーバーライド
     def get_full_name(self):

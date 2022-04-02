@@ -8,10 +8,13 @@ from django_filters import rest_framework as filters
 
 class UserProfileLoginAPIView(views.APIView):
     def post(self, request, *args, **Kwargs):
-        UserProfile_data = get_object_or_404(UserProfile, email=request.data['email'])
-        serializer = UserProfileSerializer(instance=UserProfile_data)
+        user_profile_data = get_object_or_404(UserProfile, email=request.data['email'])
+        serializer = UserProfileSerializer(instance=user_profile_data)
         print(serializer.data)
+        user_profile_data.loggedin = True
+        user_profile_data.save()
         return Response(serializer.data, status.HTTP_201_CREATED)
+        
 
 class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
