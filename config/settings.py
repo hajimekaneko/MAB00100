@@ -156,6 +156,7 @@ if DEBUG:
         'http://10.145.77.110:8080',
         'http://172.17.0.35:8080',
         'http://172.17.0.172:8080',
+        'http://192.168.52.96:8080',
     )
     CORS_ALLOW_HEADERS = default_headers + (
     'x-kbn-token',
