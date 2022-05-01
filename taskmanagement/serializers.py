@@ -3,6 +3,7 @@ from rest_framework.serializers import SerializerMethodField
 from .models import List, Task, TaskGroup
 from main.models import UserProfile
 from drf_writable_nested.serializers import WritableNestedModelSerializer
+from drf_writable_nested.mixins import UniqueFieldsMixin, NestedCreateMixin
 from main.serializers import UserProfileSerializer
 
 
@@ -13,7 +14,7 @@ class TaskGroupSerializer(WritableNestedModelSerializer):
     class Meta:
         model = TaskGroup
         fields = ('User', 'TaskGroupId', 'TaskGroup_sortId','TaskGroup_name', 'TaskGroup_status', 'TaskGroup_created_at', 'TaskGroup_updated_at', 'Task')
-        depth = 1
+
     
     def get_Task(self, obj):
 
@@ -33,6 +34,11 @@ class TaskSerializer(WritableNestedModelSerializer):
         model = Task
         # fields = ('TaskGroup', 'TaskId', 'Task_sortId','Task_name', 'Task_status', 'Task_description', 'Task_created_at', 'Task_updated_at')
         fields = ('TaskId', 'Task_sortId','Task_name', 'Task_status', 'Task_description', 'Task_created_at', 'Task_updated_at', 'List')
+        # depth = 1
+        
+    # def update(self, validated_date):
+    #     print("■■validated_date")
+    #     print(validated_date)
 
     def get_List(self, obj):
 
@@ -53,9 +59,29 @@ class ListSerializer(serializers.ModelSerializer):
 
     # task_set = serializers.
 
-
+    Task = serializers.PrimaryKeyRelatedField(
+        queryset=Task.objects.all(),
+        write_only = True
+    )
+    # Task = TaskSerializer(many=True)
     class Meta:
         model = List
+        partial=True
         # fields = '__all__'
-        fields = ('ListId', 'List_sortId','List_name', 'List_status', 'List_memo', 'List_created_at', 'List_updated_at')
-        depth = 1
+        fields = ('Task','ListId', 'List_sortId','List_name', 'List_status', 'List_memo', 'List_created_at', 'List_updated_at')
+
+    print("■")
+    # def update(self, validated_date):
+    #     print("■■validated_date")
+    #     print(validated_date)
+
+    
+    # def create(self, validated_date):
+    #     validated_date['Task'] = validated_date.get('Task_Id', None)
+
+    #     if validated_date['Task'] is None:
+    #         raise serializers.ValidationError("Task not found.") 
+
+    #     del validated_date['Task_Id']
+
+    #     return List.objects.create(**validated_date)
