@@ -1,0 +1,1 @@
+curl -XPOST -H"Content-Type: application/json" -d  "{/"List_name/":2}" "http://127.0.0.1:8000/api/v1/taskmanagement/lists/11/"

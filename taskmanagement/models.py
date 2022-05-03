@@ -11,34 +11,10 @@ class TaskStatus(models.Model):
 
     TaskStatusId = models.AutoField(primary_key=True)
     TaskStatus_name = models.CharField(verbose_name='名前', max_length=20, null=False, blank=False)
+    TaskStatus_No = models.IntegerField(verbose_name='ステータスId', null=False, blank=False, unique=True)
 
     def __str__(self):
         return self.TaskStatus_name
-
-# class TaskType(models.Model):
-#     """Typeモデル"""
-
-#     class Meta:
-#         db_table = 'TaskType'
-
-#     TaskTypeId = models.AutoField(primary_key=True)
-#     TaskType_name = models.CharField(verbose_name='名前', max_length=20, null=False, blank=False)
-
-#     def __str__(self):
-#         return self.TaskType_name
-
-# class Log(models.Model):
-#     """Typeモデル"""
-
-#     class Meta:
-#         db_table = 'Log'
-
-#     LogId = models.AutoField(primary_key=True)
-#     TaskGroup_TaskType = models.ForeignKey(TaskType, on_delete=models.CASCADE, null=False)
-
-#     def __str__(self):
-#         return self.status_name
-
 
 class TaskGroup(models.Model):
     """Groupモデル"""
