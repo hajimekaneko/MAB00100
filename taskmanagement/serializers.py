@@ -7,12 +7,12 @@ from drf_writable_nested.mixins import UniqueFieldsMixin, NestedCreateMixin
 from main.serializers import UserProfileSerializer
 
 
-class TaskGroupNoSerializerField(serializers.SlugRelatedField):
-    def get_queryset(self):
-        queryset = self.queryset
-        if hasattr(self.root, 'project_id'):
-            queryset = queryset.filter(project_id=project_id)
-        return queryset
+# class TaskGroupNoSerializerField(serializers.SlugRelatedField):
+#     def get_queryset(self):
+#         queryset = self.queryset
+#         if hasattr(self.root, 'project_id'):
+#             queryset = queryset.filter(project_id=project_id)
+#         return queryset
 
 
 class TaskGroupSerializer(WritableNestedModelSerializer):
@@ -70,12 +70,12 @@ class ListSerializer(serializers.ModelSerializer):
         queryset=Task.objects.all(),
         write_only = True
     )
-    # List_status = serializers.SlugRelatedField(
-    #     # read_only=False,
-    #     many=False,
-    #     slug_field='TaskStatus_No',
-    #     queryset=TaskStatus.objects.all()
-    #     )
+    List_status = serializers.SlugRelatedField(
+        # read_only=False,
+        many=False,
+        slug_field='TaskStatus_No',
+        queryset=TaskStatus.objects.all()
+        )
     class Meta:
         model = List
         partial=True
