@@ -1,23 +1,35 @@
 from rest_framework import serializers
 from rest_framework.serializers import SerializerMethodField
 from .models import List, Task, TaskGroup, TaskStatus
-from main.models import UserProfile
+# from main.models import UserProfile
 from drf_writable_nested.serializers import WritableNestedModelSerializer
-from drf_writable_nested.mixins import UniqueFieldsMixin, NestedCreateMixin
-from main.serializers import UserProfileSerializer
+# from drf_writable_nested.mixins import UniqueFieldsMixin, NestedCreateMixin
+# from main.serializers import UserProfileSerializer
 
 
-# class TaskGroupNoSerializerField(serializers.SlugRelatedField):
-#     def get_queryset(self):
-#         queryset = self.queryset
-#         if hasattr(self.root, 'project_id'):
-#             queryset = queryset.filter(project_id=project_id)
-#         return queryset
+class TaskStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TaskStatus
+        fields = ('TaskStatus_No', 'TaskStatus_name')
 
 
-class TaskGroupSerializer(WritableNestedModelSerializer):
-    User = UserProfileSerializer() 
+
+class TaskGroupSerializer(serializers.ModelSerializer):
+    # User = UserProfileSerializer() 
+    User = serializers.PrimaryKeyRelatedField(
+        queryset=TaskStatus.objects.all(),
+        # write_only = True
+    )
+
     Task = SerializerMethodField()
+    TaskGroup_status = TaskStatusSerializer(read_only=True)
+    # TaskGroup_status_No = serializers.SlugRelatedField(
+    #     write_only=True,
+    #     many=False,
+    #     slug_field='TaskStatus_No',
+    #     queryset=TaskStatus.objects.all()
+    # )
+
     class Meta:
         model = TaskGroup
         fields = ('User', 'TaskGroupId', 'TaskGroup_sortId','TaskGroup_name', 'TaskGroup_status', 'TaskGroup_created_at', 'TaskGroup_updated_at', 'Task')
@@ -32,11 +44,27 @@ class TaskGroupSerializer(WritableNestedModelSerializer):
             Task_abstruct_contents = None
             return Task_abstruct_contents
 
+    # def create(self, validated_date):
+    #         validated_date['TaskGroup_status'] = validated_date.get('TaskGroup_status_No', None)
+
+    #         if validated_date['TaskGroup_status'] is None:
+    #             raise serializers.ValidationError("TaskGroup_status not found.") 
+
+    #         del validated_date['TaskGroup_status_No']
+
+    #         return TaskGroup.objects.create(**validated_date)
 
 
-class TaskSerializer(WritableNestedModelSerializer):
+class TaskSerializer(serializers.ModelSerializer):
     List = SerializerMethodField()   
     print("◆◆◆◆◆◆◆◆◆◆◆◆TaskSerializer")
+
+    Task_status = serializers.SlugRelatedField(
+        # read_only=False,
+        many=False,
+        slug_field='TaskStatus_No',
+        queryset=TaskStatus.objects.all()
+    )
     class Meta:
         model = Task
         # fields = ('TaskGroup', 'TaskId', 'Task_sortId','Task_name', 'Task_status', 'Task_description', 'Task_created_at', 'Task_updated_at')
@@ -75,10 +103,10 @@ class ListSerializer(serializers.ModelSerializer):
         many=False,
         slug_field='TaskStatus_No',
         queryset=TaskStatus.objects.all()
-        )
+    )
     class Meta:
         model = List
-        partial=True
+        # partial=True
         # fields = '__all__'
         fields = ('Task','ListId', 'List_sortId','List_name', 'List_status', 'List_memo', 'List_created_at', 'List_updated_at')
 

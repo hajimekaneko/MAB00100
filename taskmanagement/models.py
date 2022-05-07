@@ -11,7 +11,7 @@ class TaskStatus(models.Model):
 
     TaskStatusId = models.AutoField(primary_key=True)
     TaskStatus_name = models.CharField(verbose_name='名前', max_length=20, null=False, blank=False)
-    TaskStatus_No = models.IntegerField(verbose_name='ステータスId', null=False, blank=False, unique=True)
+    TaskStatus_No = models.IntegerField(verbose_name='ステータスId', null=False, blank=False)
 
     def __str__(self):
         return self.TaskStatus_name
