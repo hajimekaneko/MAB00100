@@ -3,7 +3,7 @@
 
 SET BatFileName=%~n0
 SET JobName=%BatFileName:~0,8%
-SET JobName2=MAF00100
+SET JobName2=MAF00200
 
 d:
 cd User_Application\%JobName%

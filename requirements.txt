@@ -1,4 +1,4 @@
-django
+django==3.1.7
 django_cleanup
 django_filter
 djangorestframework
@@ -7,5 +7,16 @@ drf_writable_nested
 gunicorn 
 whitenoise 
 django-heroku
-djangorestframework-simplejwt==4.6.*  検討中
-djoser　検討中
+pip install djangorestframework-simplejwt==4.4.0
+pip install pyJWT==1.7.1
+pip install dj-rest-auth==2.1.3
+pip install django-allauth==0.44.0
+
+pip install djangorestframework-jwt
+https://qiita.com/xKxAxKx/items/60e8fb93d6bbeebcf065
+
+pip install drf-firebase-auth
+https://www.wenyanet.com/opensource/ja/5fc25e953f5f684edc665d66.html
+
+pip install django-environ
+pip install firebase-admin
