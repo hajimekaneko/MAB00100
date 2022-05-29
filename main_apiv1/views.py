@@ -19,8 +19,6 @@ class GoogleLoginView(SocialLoginView):
     cliant_class = OAuth2Client
 
 
-
-
 class UserProfileLoginAPIView(views.APIView):
     def post(self, request, *args, **Kwargs):
         print(request.data)

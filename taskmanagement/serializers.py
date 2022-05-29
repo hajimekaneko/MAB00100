@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.serializers import SerializerMethodField
 from .models import List, Task, TaskGroup, TaskStatus
-# from main.models import UserProfile
+from main.models import UserProfile
 from drf_writable_nested.serializers import WritableNestedModelSerializer
 # from drf_writable_nested.mixins import UniqueFieldsMixin, NestedCreateMixin
 # from main.serializers import UserProfileSerializer
@@ -13,11 +13,10 @@ class TaskStatusSerializer(serializers.ModelSerializer):
         fields = ('TaskStatus_No', 'TaskStatus_name')
 
 
-
 class TaskGroupSerializer(serializers.ModelSerializer):
     # User = UserProfileSerializer() 
     User = serializers.PrimaryKeyRelatedField(
-        queryset=TaskStatus.objects.all(),
+        queryset=UserProfile.objects.all(),
         # write_only = True
     )
 
@@ -46,7 +45,7 @@ class TaskGroupSerializer(serializers.ModelSerializer):
 
     def update(self,  instance, validated_date):
         validated_date['TaskGroup_status'] = validated_date.get('TaskGroup_status_No', None)
-        print(instance )
+        print(instance)
 
         if validated_date['TaskGroup_status'] is None:
             raise serializers.ValidationError("TaskGroup_status not found.") 
@@ -55,10 +54,21 @@ class TaskGroupSerializer(serializers.ModelSerializer):
 
         return TaskGroup.objects.create(**validated_date)
 
+    def create(self, validated_date):
+        validated_date['TaskGroup_status'] = validated_date.get('TaskGroup_status_No', None)
+        if validated_date['TaskGroup_status'] is None:
+            raise serializers.ValidationError("TaskGroup_status not found.") 
+        del validated_date['TaskGroup_status_No']
+
+        return TaskGroup.objects.create(**validated_date)
+
 
 class TaskSerializer(serializers.ModelSerializer):
+    TaskGroup = serializers.PrimaryKeyRelatedField(
+        queryset=TaskGroup.objects.all(),
+        write_only = True
+    )
     List = SerializerMethodField()   
-    print("◆◆◆◆◆◆◆◆◆◆◆◆TaskSerializer")
 
     Task_status = serializers.SlugRelatedField(
         # read_only=False,
@@ -69,12 +79,9 @@ class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
         # fields = ('TaskGroup', 'TaskId', 'Task_sortId','Task_name', 'Task_status', 'Task_description', 'Task_created_at', 'Task_updated_at')
-        fields = ('TaskId', 'Task_sortId','Task_name', 'Task_status', 'Task_description', 'Task_created_at', 'Task_updated_at', 'List')
+        fields = ('TaskGroup','TaskId', 'Task_sortId','Task_name', 'Task_status', 'Task_description', 'Task_created_at', 'Task_updated_at', 'List')
         # depth = 1
         
-    # def update(self, validated_date):
-    #     print("■■validated_date")
-    #     print(validated_date)
 
     def get_List(self, obj):
 
@@ -88,12 +95,6 @@ class TaskSerializer(serializers.ModelSerializer):
 
 
 class ListSerializer(serializers.ModelSerializer):
-    # 対象のフィールドのSerializerを置き換えると、ListSerializerを使って展開される
-    # ManyToManyのように複数の場合は「many=True」をつける
-    # contextを設定すると、URLの展開などをしてくれる
-    # tasks = TaskSerializer() 
-
-    # task_set = serializers.
 
     Task = serializers.PrimaryKeyRelatedField(
         queryset=Task.objects.all(),

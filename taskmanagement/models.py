@@ -48,7 +48,6 @@ class Task(models.Model):
     Task_name = models.CharField(verbose_name='名前', max_length=20, null=False, blank=True)
     Task_status = models.ForeignKey(TaskStatus, on_delete=models.CASCADE, default=1, null=False)
     Task_description = models.TextField(verbose_name='タスクの内容', null=True, blank=True)
-    # Task_list = ForeignKey(List, related_name='tasks', verbose_name="リスト", on_delete=models.PROTECT)
     Task_created_at = models.DateTimeField(verbose_name="登録日時", auto_now_add=True)
     Task_updated_at = models.DateTimeField(verbose_name='更新日時', auto_now=True)
 
