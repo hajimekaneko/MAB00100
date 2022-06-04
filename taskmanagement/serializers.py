@@ -21,9 +21,8 @@ class TaskGroupSerializer(serializers.ModelSerializer):
     )
 
     Task = SerializerMethodField()
-    TaskGroup_status = TaskStatusSerializer(read_only=True)
-    TaskGroup_status_No = serializers.SlugRelatedField(
-        write_only=True,
+    TaskGroup_status = serializers.SlugRelatedField(
+        # read_only=False,
         many=False,
         slug_field='TaskStatus_No',
         queryset=TaskStatus.objects.all()
@@ -31,7 +30,7 @@ class TaskGroupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TaskGroup
-        fields = ('User', 'TaskGroupId', 'TaskGroup_status_No', 'TaskGroup_sortId','TaskGroup_name', 'TaskGroup_status', 'TaskGroup_created_at', 'TaskGroup_updated_at', 'Task')
+        fields = ('User', 'TaskGroupId', 'TaskGroup_status', 'TaskGroup_sortId','TaskGroup_name', 'TaskGroup_created_at', 'TaskGroup_updated_at', 'Task')
 
     
     def get_Task(self, obj):
@@ -43,24 +42,58 @@ class TaskGroupSerializer(serializers.ModelSerializer):
             Task_abstruct_contents = None
             return Task_abstruct_contents
 
-    def update(self,  instance, validated_date):
-        validated_date['TaskGroup_status'] = validated_date.get('TaskGroup_status_No', None)
-        print(instance)
 
-        if validated_date['TaskGroup_status'] is None:
-            raise serializers.ValidationError("TaskGroup_status not found.") 
 
-        del validated_date['TaskGroup_status_No']
 
-        return TaskGroup.objects.create(**validated_date)
+# class TaskGroupSerializer(serializers.ModelSerializer):
+#     # User = UserProfileSerializer() 
+#     User = serializers.PrimaryKeyRelatedField(
+#         queryset=UserProfile.objects.all(),
+#         # write_only = True
+#     )
 
-    def create(self, validated_date):
-        validated_date['TaskGroup_status'] = validated_date.get('TaskGroup_status_No', None)
-        if validated_date['TaskGroup_status'] is None:
-            raise serializers.ValidationError("TaskGroup_status not found.") 
-        del validated_date['TaskGroup_status_No']
+#     Task = SerializerMethodField()
+#     TaskGroup_status = TaskStatusSerializer(read_only=True)
+#     TaskGroup_status_No = serializers.SlugRelatedField(
+#         write_only=True,
+#         many=False,
+#         slug_field='TaskStatus_No',
+#         queryset=TaskStatus.objects.all()
+#     )
 
-        return TaskGroup.objects.create(**validated_date)
+#     class Meta:
+#         model = TaskGroup
+#         fields = ('User', 'TaskGroupId', 'TaskGroup_status_No', 'TaskGroup_sortId','TaskGroup_name', 'TaskGroup_status', 'TaskGroup_created_at', 'TaskGroup_updated_at', 'Task')
+
+    
+#     def get_Task(self, obj):
+
+#         try:
+#             Task_abstruct_contents = TaskSerializer(Task.objects.all().filter(TaskGroup = TaskGroup.objects.get(TaskGroupId=obj.TaskGroupId)), many=True).data
+#             return Task_abstruct_contents
+#         except:
+#             Task_abstruct_contents = None
+#             return Task_abstruct_contents
+
+#     def update(self,  instance, validated_date):
+#         print(" □□□□□□□□□□□")
+#         print(validated_date)
+#         validated_date['TaskGroup_status'] = validated_date.get('TaskGroup_status_No', None)
+
+#         if validated_date['TaskGroup_status'] is None:
+#             raise serializers.ValidationError("TaskGroup_status not found.") 
+
+#         del validated_date['TaskGroup_status_No']
+
+#         return TaskGroup.objects.update(**validated_date)
+
+#     def create(self, validated_date):
+#         validated_date['TaskGroup_status'] = validated_date.get('TaskGroup_status_No', None)
+#         if validated_date['TaskGroup_status'] is None:
+#             raise serializers.ValidationError("TaskGroup_status not found.") 
+#         del validated_date['TaskGroup_status_No']
+
+#         return TaskGroup.objects.create(**validated_date)
 
 
 class TaskSerializer(serializers.ModelSerializer):
