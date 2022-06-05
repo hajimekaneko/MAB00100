@@ -27,10 +27,32 @@ class UserProfileLoginAPIView(views.APIView):
         print(uid)
 
         user_profile_data = get_object_or_404(UserProfile, userId=uid)
+        print(user_profile_data)
         serializer = UserProfileSerializer(instance=user_profile_data)
         user_profile_data.loggedin = True
         user_profile_data.save()
         return Response(serializer.data, status.HTTP_201_CREATED)
+
+class UserProfileSignupAPIView(views.APIView):
+    def post(self, request, *args, **Kwargs):
+        print(request.data)
+        decoded_token = auth.verify_id_token(request.data)
+        uid = decoded_token['uid']
+        print(uid)
+        serializer = UserProfileSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        # user_profile_data = get_object_or_404(UserProfile, userId=uid)
+        # print(user_profile_data)
+        # 
+        # user_profile_data.loggedin = True
+        # user_profile_data.save()
+        # return Response(serializer.errors, status.HTTP_201_CREATED)
         
 
 class UserProfileViewSet(viewsets.ModelViewSet):
