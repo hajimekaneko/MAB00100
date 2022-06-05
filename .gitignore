@@ -2,6 +2,8 @@
 
 log/
 ~$*
+migrations/
+認証キー/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -13,9 +13,16 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 from corsheaders.defaults import default_headers
 import os
+from datetime import timedelta
+import environ
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+env = environ.Env()
+env.read_env(os.path.join(BASE_DIR,'.env'))
 
 
 # Quick-start development settings - unsuitable for production
@@ -27,7 +34,7 @@ SECRET_KEY = 'django-insecure-f-)7l4#nckqf4v)z2-n_0d2g)v^op5!lea*7*epxt*dc9l$gx*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -44,8 +51,46 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',  # django-cleanupを使いたいなら、これも追加
     'rest_framework',  # 追加
     'django_filters',
-    # 'main',
+    'django.contrib.sites',
+    'rest_framework.authtoken',
+    'dj_rest_auth',
+    'dj_rest_auth.registration',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'drf_firebase_auth',
+    'firebase_admin',
 ]
+
+# https://django-allauth.readthedocs.io/en/latest/providers.html#google
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
+
+# https://django-allauth.readthedocs.io/en/latest/configuration.html
+SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
+SOCIALACCOUNT_EMAIL_REQUIRED = False
+
+# https://dj-rest-auth.readthedocs.io/en/latest/installation.html
+SITE_ID = 1
+
+# https://dj-rest-auth.readthedocs.io/en/latest/configuration.html
+REST_USE_JWT = True
+REST_AUTH_SERIALIZERS = {
+    'USER_DETAILS_SERIALIZER': 'main.serializers.UserSerializer',
+}
+
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -82,18 +127,101 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'mab00100',
+        'USER': 'mab00100',
+        'PASSWORD': 'mab00100',
+        'HOST': 'localhost',
+        'POST': '5432',
     }
 }
 
-
-REST_FRAMEWORK = { #追加
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
-    ]
+JWT_AUTH = {
+    'JWT_VERIFY_EXPIRATION': False,
+    'JWT_AUTH_HEADER_PREFIX': 'JWT',
 }
+
+# REST_FRAMEWORK = { #追加
+#     'DEFAULT_PERMISSION_CLASSES': [
+#         'rest_framework.permissions.AllowAny',
+#     ],
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+#     )
+# }
+
+REST_FRAMEWORK = { 
+    'DEFAULT_PERMISSION_CLASSES': (
+        # 'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.AllowAny',
+    ),  
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'drf_firebase_auth.authentication.FirebaseAuthentication',
+    ),  
+    'NON_FIELD_ERRORS_KEY': 'detail',
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
+}
+
+# def map_firebase_uid_to_username(
+#     firebase_user: firebase_admin.auth.UserRecord
+# ) -> str:
+#     try:
+#         return firebase_user.uid
+#     except Exception as e:
+#         raise Exception(e)
+
+DRF_FIREBASE_AUTH = {
+    # allow anonymous requests without Authorization header set
+    'ALLOW_ANONYMOUS_REQUESTS': os.getenv('ALLOW_ANONYMOUS_REQUESTS', False),
+    # path to JSON file with firebase secrets
+    'FIREBASE_SERVICE_ACCOUNT_KEY':
+    env.get_value('FIREBASE_SERVICE_ACCOUNT_KEY',str),
+    # allow creation of new local user in db
+    'FIREBASE_CREATE_LOCAL_USER':
+        os.getenv('FIREBASE_CREATE_LOCAL_USER', True),
+    # attempt to split firebase user.display_name and set local user
+    # first_name and last_name
+    'FIREBASE_ATTEMPT_CREATE_WITH_DISPLAY_NAME':
+        os.getenv('FIREBASE_ATTEMPT_CREATE_WITH_DISPLAY_NAME', True),
+    # commonly JWT or Bearer (e.g. JWT <token>)
+    'FIREBASE_AUTH_HEADER_PREFIX':
+        os.getenv('FIREBASE_AUTH_HEADER_PREFIX', 'JWT'),
+    # verify that JWT has not been revoked
+    'FIREBASE_CHECK_JWT_REVOKED':
+        os.getenv('FIREBASE_CHECK_JWT_REVOKED', True),
+    # require that firebase user.email_verified is True
+    'FIREBASE_AUTH_EMAIL_VERIFICATION':
+        os.getenv('FIREBASE_AUTH_EMAIL_VERIFICATION', False),
+    # function should accept firebase_admin.auth.UserRecord as argument
+    # and return str
+    # 'FIREBASE_USERNAME_MAPPING_FUNC': map_firebase_uid_to_username
+}
+
+
+# https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html
+
+
+SIMPLE_JWT = {
+    'AUTH_HEADER_TYPES': ('JWT',),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=5),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'UPDATE_LAST_LOGIN': True,
+    'USER_ID_FIELD': 'userId',
+    'USER_ID_CLAIM': 'user_id',
+}
+
+AUTH_USER_MODEL = 'main.UserProfile'
+
+
+
 
 # Djangoプロジェクトのユーザ認証を変更
 AUTH_USER_MODEL = 'main.UserProfile'
@@ -134,6 +262,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
 # メディアファイルの設定
@@ -151,10 +280,24 @@ if DEBUG:
     MIDDLEWARE = ['corsheaders.middleware.CorsMiddleware'] + MIDDLEWARE
     CORS_ORIGIN_WHITELIST = (
         'http://192.168.0.22:8080',
+        'https://maf00200.herokuapp.com',
         'http://localhost:8080',
+        'http://localhost:8081',
         'https://maf00100.herokuapp.com',
         'http://10.145.77.110:8080',
         'http://172.17.0.35:8080',
+        'http://172.17.0.172:8080',
+        'http://172.17.0.234:8080',
+        'http://192.168.52.96:8080',
+        'http://10.145.81.95:8080',
+        'http://10.18.40.102:8080',
+        'http://192.168.150.96:8080',
+        'http://172.17.0.236:8080',
+        'http://192.168.150.96:8080',
+        'http://10.18.135.63:8080',
+        'http://192.168.243.96:8080',
+        'http://192.168.165.96:8080',
+        'http://192.168.36.96:8080',
     )
     CORS_ALLOW_HEADERS = default_headers + (
     'x-kbn-token',

@@ -1,0 +1,1 @@
+curl -XPATCH -H"Content-Type: application/json" -d  "{\"TaskGroup_status_No\": 1}" "http://127.0.0.1:8000/api/v1/taskmanagement/task_groups/2/"
