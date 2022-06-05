@@ -271,6 +271,7 @@ if DEBUG:
     MIDDLEWARE = ['corsheaders.middleware.CorsMiddleware'] + MIDDLEWARE
     CORS_ORIGIN_WHITELIST = (
         'http://192.168.0.22:8080',
+        'https://maf00200.herokuapp.com',
         'http://localhost:8080',
         'http://localhost:8081',
         'https://maf00100.herokuapp.com',

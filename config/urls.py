@@ -10,7 +10,7 @@ urlpatterns = [
     path('api/v1/main/', include('main_apiv1.urls')),
     
     path('api/v1/auth/', include('dj_rest_auth.urls')),
-    path('api/v1/social/login/', include('main_apiv1.urls')),
+    # path('api/v1/social/login/', include('main_apiv1.urls')),
 ]
 
 urlpatterns += static(
