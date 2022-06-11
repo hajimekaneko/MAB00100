@@ -1,7 +1,7 @@
 
 
-log/
-~$*
+log/app/*
+/~$*
 migrations/
 認証キー/
 
