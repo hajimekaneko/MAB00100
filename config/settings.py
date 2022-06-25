@@ -179,10 +179,10 @@ REST_FRAMEWORK = {
 
 DRF_FIREBASE_AUTH = {
     # allow anonymous requests without Authorization header set
-    'ALLOW_ANONYMOUS_REQUESTS': os.getenv('ALLOW_ANONYMOUS_REQUESTS1', False)+os.getenv('ALLOW_ANONYMOUS_REQUESTS2', False),
+    'ALLOW_ANONYMOUS_REQUESTS': os.getenv('ALLOW_ANONYMOUS_REQUESTS', False),
     # path to JSON file with firebase secrets
     'FIREBASE_SERVICE_ACCOUNT_KEY':
-    env.get_value('FIREBASE_SERVICE_ACCOUNT_KEY',str),
+    env.get_value('FIREBASE_SERVICE_ACCOUNT_KEY1',str)+env.get_value('FIREBASE_SERVICE_ACCOUNT_KEY2',str),
     # allow creation of new local user in db
     'FIREBASE_CREATE_LOCAL_USER':
         os.getenv('FIREBASE_CREATE_LOCAL_USER', True),
