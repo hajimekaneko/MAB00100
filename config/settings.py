@@ -181,8 +181,18 @@ DRF_FIREBASE_AUTH = {
     # allow anonymous requests without Authorization header set
     'ALLOW_ANONYMOUS_REQUESTS': os.getenv('ALLOW_ANONYMOUS_REQUESTS', False),
     # path to JSON file with firebase secrets
-    'FIREBASE_SERVICE_ACCOUNT_KEY':
-    env.get_value('FIREBASE_SERVICE_ACCOUNT_KEY1',str)+env.get_value('FIREBASE_SERVICE_ACCOUNT_KEY2',str),
+    'FIREBASE_SERVICE_ACCOUNT_KEY': {
+        "type": "service_account",
+        "project_id": os.getenv('FIREBASE_PROJECT_ID', ''),
+        "private_key_id": os.getenv('FIREBASE_PRIVATE_KEY_ID', ''),
+        "private_key": os.getenv('FIREBASE_PRIVATE_KEY', '').replace('\\n', '\n'),
+        "client_email": os.getenv('FIREBASE_CLIENT_EMAIL', ''),
+        "client_id": os.getenv('FIREBASE_CLIENT_ID', ''),
+        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+        "token_uri": "https://oauth2.googleapis.com/token",
+        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+        "client_x509_cert_url": os.getenv('FIREBASE_CLIENT_X509_URL', ''),
+    },
     # allow creation of new local user in db
     'FIREBASE_CREATE_LOCAL_USER':
         os.getenv('FIREBASE_CREATE_LOCAL_USER', True),
