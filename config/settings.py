@@ -179,7 +179,7 @@ REST_FRAMEWORK = {
 
 DRF_FIREBASE_AUTH = {
     # allow anonymous requests without Authorization header set
-    'ALLOW_ANONYMOUS_REQUESTS': os.getenv('ALLOW_ANONYMOUS_REQUESTS', False),
+    'ALLOW_ANONYMOUS_REQUESTS': os.getenv('ALLOW_ANONYMOUS_REQUESTS1', False)+os.getenv('ALLOW_ANONYMOUS_REQUESTS2', False),
     # path to JSON file with firebase secrets
     'FIREBASE_SERVICE_ACCOUNT_KEY':
     env.get_value('FIREBASE_SERVICE_ACCOUNT_KEY',str),
